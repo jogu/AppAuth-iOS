@@ -34,6 +34,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, readonly) OIDServiceConfiguration *configuration;
 
+/*! @brief Any access token necessary to access the Client Registration Endpoint
+    @remarks OAuth 2.0 Access Token optionally issued by an Authorization Server granting
+        access to its Client Registration Endpoint
+ */
+@property(nonatomic, readonly) NSString *initialAccessToken;
+
 /*! @brief The application type to register, will always be 'native'.
     @remarks application_type
     @see https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata
@@ -79,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)init NS_UNAVAILABLE;
 
-/*! @brief Designated initializer.
+/*! @brief Initializer if no initial access token required
     @param configuration The service's configuration.
     @param redirectURIs The redirect URIs to register for the client.
     @param responseTypes The response types to register for the client.
@@ -95,7 +101,28 @@ NS_ASSUME_NONNULL_BEGIN
                  grantTypes:(nullable NSArray<NSString *> *)grantTypes
                 subjectType:(nullable NSString *)subjectType
     tokenEndpointAuthMethod:(nullable NSString *)tokenEndpointAuthMethod
-       additionalParameters:(nullable NSDictionary<NSString *, NSString *> *)additionalParameters
+       additionalParameters:(nullable NSDictionary<NSString *, NSString *> *)additionalParameters;
+
+/*! @brief Designated initializer.
+    @param configuration The service's configuration.
+    @param initialAccessToken Any bearer token required to access registration endpoint
+    @param redirectURIs The redirect URIs to register for the client.
+    @param responseTypes The response types to register for the client.
+    @param grantTypes The grant types to register for the client.
+    @param subjectType The subject type to register for the client.
+    @param tokenEndpointAuthenticationMethod The token endpoint authentication method to register
+        for the client.
+    @param additionalParameters The client's additional registration request parameters.
+    @see https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
+ */
+- (instancetype)initWithConfiguration:(OIDServiceConfiguration *)configuration
+                   initialAccessToken:(nullable NSString *)initialAccessToken
+                         redirectURIs:(NSArray<NSURL *> *)redirectURIs
+                        responseTypes:(nullable NSArray<NSString *> *)responseTypes
+                           grantTypes:(nullable NSArray<NSString *> *)grantTypes
+                          subjectType:(nullable NSString *)subjectType
+              tokenEndpointAuthMethod:(nullable NSString *)tokenEndpointAuthenticationMethod
+                 additionalParameters:(nullable NSDictionary<NSString *, NSString *> *)additionalParameters
     NS_DESIGNATED_INITIALIZER;
 
 /*! @brief Constructs an @c NSURLRequest representing the registration request.
