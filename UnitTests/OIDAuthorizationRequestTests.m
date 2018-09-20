@@ -440,7 +440,7 @@ static int const kCodeVerifierRecommendedLength = 43;
 
   NSString *scope = [OIDScopeUtilities scopesWithArray:@[ kTestScope, kTestScopeA ]];
 
-  XCTAssertThrows(
+  XCTAssertNoThrow(
       [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
                       clientId:kTestClientID
                   clientSecret:kTestClientSecret
@@ -462,6 +462,21 @@ static int const kCodeVerifierRecommendedLength = 43;
                         scope:scope
                   redirectURL:[NSURL URLWithString:kTestRedirectURL]
                   responseType:@"code token id_token"
+                         state:kTestState
+                         nonce:kTestNonce
+                  codeVerifier:kTestCodeVerifier
+                 codeChallenge:[[self class] codeChallenge]
+           codeChallengeMethod:[[self class] codeChallengeMethod]
+          additionalParameters:additionalParameters]
+  );
+
+  XCTAssertThrows(
+      [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
+                      clientId:kTestClientID
+                  clientSecret:kTestClientSecret
+                        scope:scope
+                  redirectURL:[NSURL URLWithString:kTestRedirectURL]
+                  responseType:@"token"
                          state:kTestState
                          nonce:kTestNonce
                   codeVerifier:kTestCodeVerifier
